@@ -1461,6 +1461,30 @@
     <script>
 // ===== CONFIGURATION =====
 // Replace these with your actual Supabase credentials
+import { createClient } from '@supabase/supabase-js';
+
+// Replace with your project details
+const SUPABASE_URL = 'https://abcdefghijk.supabase.co';
+const SUPABASE_KEY = 'your-anon-key-here';
+
+export const supabaseClient = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+export async function handleSubmit(formData) {
+  const { data, error } = await supabaseClient
+    .from('students')
+    .insert([formData]);
+
+  if (error) {
+    console.error('Error:', error);
+    return false;
+  }
+
+  console.log('Inserted:', data);
+  return true;
+}
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 const API_BASE = ''; // Leave empty for same-origin Vercel deployment, or set your deployed URL
@@ -2064,6 +2088,20 @@ async function loadLogs() {
     setLoading(false);
   }
 }
+const student = {
+  group_name: document.getElementById('group').value,
+  adno: document.getElementById('adno').value,
+  name: document.getElementById('name').value,
+  grade: document.getElementById('grade').value,
+  fphone: document.getElementById('phone').value
+};
+
+await handleSubmit(student);
+const { data, error } = await supabaseClient
+  .from('students')
+  .select('*');
+
+console.log(data);
 
 // ===== PUBLIC ADMISSION FORM SUBMIT =====
 async function submitAdmission() {
